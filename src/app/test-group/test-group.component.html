@@ -1,0 +1,62 @@
+ <div style="margin-top:10px; margin-left: 20px;">
+        <mat-form-field>
+            <mat-label>Choose start date</mat-label>
+            <input matInput [matDatepicker]="picker" (dateInput)="startdateChosen()" [(ngModel)]="startDate" disabled>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker disabled=false></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field style="margin-left: 20px;">
+                <mat-label>Choose end date</mat-label>
+                <input matInput [matDatepicker]="picker1" [(ngModel)]="endDate" disabled>
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1 disabled=false></mat-datepicker>
+            </mat-form-field>
+            <button style="margin-left: 20px;" mat-raised-button color="primary" (click)="getData(false)">GO</button>
+            <button style="margin-left: 20px;" mat-raised-button color="primary" (click)="getData()">Get All Data</button>
+    </div>
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <ng-container *ngFor="let column of columns; let i = index" matColumnDef="{{ column.field }}">
+          <mat-header-cell *matHeaderCellDef>
+      
+            <button class="grid-view-header-menu"
+              mat-icon-button [matMenuTriggerFor]="menu" >
+              <mat-icon >menu</mat-icon>
+            </button>
+      
+            <mat-menu #menu>
+              <button mat-menu-item (click)="groupBy($event, column);">Group By This Field</button>
+              <button mat-menu-item (click)="unGroupBy($event, column);" >Ungroup</button>
+            </mat-menu>
+            {{ column.displayName }}
+          </mat-header-cell>
+          <ng-container>
+              <mat-cell *matCellDef="let row">{{ row[column.field] }}
+                  <button  mat-icon-button (click)="delete(row);" *ngIf="column.field == 'action'"> 
+                    <mat-icon>delete</mat-icon>
+                  </button>
+              </mat-cell>
+          </ng-container>
+        </ng-container>
+      
+          <mat-header-row mat-header-row *matHeaderRowDef="displayedColumns;sticky:true"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      
+          <!-- Group header -->
+          <ng-container matColumnDef="groupHeader">
+              <mat-cell colspan="999" *matCellDef="let group">
+            <mat-icon *ngIf="group.expanded">expand_more</mat-icon>
+            <mat-icon *ngIf="!group.expanded">chevron_right</mat-icon>
+                  <strong class="groupByHeader">{{groupByColumns[group.level-1]}} = {{group[groupByColumns[group.level-1]]}} ({{group.totalCounts}})</strong>
+            </mat-cell>
+        </ng-container>
+      
+        <mat-row *matRowDef="let row; columns: ['groupHeader']; when: isGroup" (click)="groupHeaderClick(row)"> </mat-row>
+      
+      </mat-table>
+
+      <mat-card style="margin-top: 20px">Balance : {{totalcost}}
+          <mat-card-actions>
+              <button mat-raised-button color="primary"(click)="addOpeningBalance()">Update opening balance </button>
+            </mat-card-actions>
+      </mat-card>

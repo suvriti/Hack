@@ -1,0 +1,85 @@
+<mat-horizontal-stepper (selectionChange)="onStepChange($event)">
+    <mat-step label="Input">
+        <div>
+            <mat-form-field>
+                <mat-label>Select Type</mat-label>
+                <mat-select [(ngModel)]="khataEntry.type" name="type">
+                    <mat-option *ngFor="let type of dataService.type" [value]="type">
+                        {{type}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Shop</mat-label>
+                <mat-select [(ngModel)]="khataEntry.shop" name="shop">
+                    <mat-option *ngFor="let shop of dataService.shop" [value]="shop">
+                        {{shop}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <!-- <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput placeholder="Name" [(ngModel)]="khataEntry.name">
+            </mat-form-field> -->
+            <mat-form-field class="example-full-width">
+                    <input type="text"
+                           placeholder="Name"
+                           aria-label="Number"
+                           matInput
+                           [formControl]="nameControl"
+                           [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let option of nameFilteredOptions | async" [value]="option">
+                        {{option}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Amount</mat-label>
+                <input matInput placeholder="Amount" [(ngModel)]="khataEntry.amount">
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Choose a date</mat-label>
+                <input matInput [matDatepicker]="picker" [(ngModel)]="khataEntry.date" disabled>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker disabled=false></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div>
+            <button mat-raised-button color="primary" matStepperNext>Next</button>
+        </div>
+    </mat-step>
+    <mat-step label="Verify">
+        <mat-list role="list">
+            <mat-list-item role="listitem">Type : {{khataEntry.type}}</mat-list-item>
+            <mat-list-item role="listitem">Shop : {{khataEntry.shop}}</mat-list-item>
+            <mat-list-item role="listitem">Name : {{khataEntry.name}}</mat-list-item>
+            <mat-list-item role="listitem">Amount : {{khataEntry.amount}}</mat-list-item>
+            <mat-list-item role="listitem">Date : {{khataEntry.date}}</mat-list-item>
+        </mat-list>
+        <div>
+            <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+            <button mat-raised-button color="primary" matStepperNext (click)="submit()">Submit</button>
+        </div>
+    </mat-step>
+    <mat-step label="Done">
+        <div>
+            <p>
+                The entry has been Sucessfully created.
+                <a routerLink="/ledger-beta" routerLinkActive="active">View Your Entry</a>
+                <br>
+                <a href="javascript:void(0)" onclick="window.location.reload()">Create a new Entry.</a>
+              
+            </p>
+        </div>
+
+    </mat-step>
+</mat-horizontal-stepper>
